@@ -47,12 +47,12 @@ const manifest = withSidePanel({
     type: 'module',
   },
   action: {
-    default_popup: 'popup/index.html',
+    // default_popup: 'popup/index.html',
     default_icon: 'icon-34.png',
   },
-  chrome_url_overrides: {
-    newtab: 'new-tab/index.html',
-  },
+  // chrome_url_overrides: {
+  //   newtab: 'new-tab/index.html',
+  // },
   icons: {
     128: 'icon-128.png',
   },
