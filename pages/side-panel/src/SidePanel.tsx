@@ -1,16 +1,19 @@
 import '@src/SidePanel.css';
 import { useStorage, withErrorBoundary, withSuspense } from '@extension/shared';
 import { exampleThemeStorage } from '@extension/storage';
-import type { ComponentPropsWithoutRef } from 'react';
+import { useState, type ComponentPropsWithoutRef } from 'react';
 
 const SidePanel = () => {
   const theme = useStorage(exampleThemeStorage);
   const isLight = theme === 'light';
-  const logo = isLight ? 'side-panel/logo_vertical.svg' : 'side-panel/logo_vertical_dark.svg';
-  const goGithubSite = () =>
-    chrome.tabs.create({ url: 'https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite' });
+  const logo = 'side-panel/smile_pepe.jpeg';
+  const goGithubSite = () => chrome.tabs.create({ url: 'https://github.com/piatoss3612/extension-demo' });
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getAuthToken = () => {
+    setIsLoading(true);
+
     chrome.identity.getAuthToken({ interactive: true }, async token => {
       const init = {
         method: 'GET',
@@ -26,6 +29,8 @@ const SidePanel = () => {
       const data = await response.json();
 
       console.log(data);
+
+      setIsLoading(false);
     });
   };
 
@@ -42,7 +47,7 @@ const SidePanel = () => {
         <button
           className="mt-4 rounded bg-blue-500 px-4 py-1 font-bold text-white shadow hover:scale-105"
           onClick={getAuthToken}>
-          Get AuthToken
+          {isLoading ? 'Loading...' : 'Get Auth Token'}
         </button>
       </header>
     </div>
