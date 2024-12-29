@@ -22,7 +22,7 @@ chrome.runtime.onMessage.addListener(
             title: 'Web Notification',
             message: message.message,
             priority: 0,
-            requireInteraction: true,
+            requireInteraction: !!message.requireInteraction,
           },
           notificationId => {
             console.log('notificationId', notificationId);
