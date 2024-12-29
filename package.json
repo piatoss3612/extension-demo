@@ -26,14 +26,15 @@
   },
   "dependencies": {
     "eslint-plugin-tailwindcss": "^3.17.4",
-    "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-router": "^7.1.1"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.270",
+    "@types/chrome": "^0.0.287",
     "@types/node": "^22.5.5",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "autoprefixer": "^10.4.20",
@@ -52,12 +53,12 @@
     "postcss": "^8.4.47",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
+    "run-script-os": "^1.1.6",
     "tailwindcss": "^3.4.14",
     "tslib": "^2.6.3",
-    "typescript": "5.5.4",
-    "vite": "5.4.9",
     "turbo": "^2.1.1",
-    "run-script-os": "^1.1.6"
+    "typescript": "5.5.4",
+    "vite": "5.4.9"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json}": [
