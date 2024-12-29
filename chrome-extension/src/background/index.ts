@@ -8,5 +8,34 @@ exampleThemeStorage.get().then(theme => {
   console.log('theme', theme);
 });
 
+chrome.runtime.onMessage.addListener(
+  (
+    message,
+    // sender, sendResponse
+  ) => {
+    if (message.type === 'WEB_NOTIFICATION') {
+      setTimeout(() => {
+        chrome.notifications.create(
+          {
+            type: 'basic',
+            iconUrl: chrome.runtime.getURL('side-panel/smile_pepe.jpeg'),
+            title: 'Web Notification',
+            message: message.message,
+            priority: 1,
+            requireInteraction: true,
+          },
+          notificationId => {
+            console.log('notificationId', notificationId);
+          },
+        );
+
+        chrome.notifications.onClicked.addListener(notificationId => {
+          console.log('notificationId', notificationId);
+        });
+      }, 3000);
+    }
+  },
+);
+
 console.log('background loaded');
 console.log("Edit 'chrome-extension/src/background/index.ts' and save to reload.");

@@ -15,6 +15,8 @@ const SidePanel = () => {
     setIsLoading(true);
 
     chrome.identity.getAuthToken({ interactive: true }, async token => {
+      console.log(token);
+
       const init = {
         method: 'GET',
         async: true,
@@ -48,6 +50,16 @@ const SidePanel = () => {
           className="mt-4 rounded bg-blue-500 px-4 py-1 font-bold text-white shadow hover:scale-105"
           onClick={getAuthToken}>
           {isLoading ? 'Loading...' : 'Get Auth Token'}
+        </button>
+        <button
+          className="mt-4 rounded bg-blue-500 px-4 py-1 font-bold text-white shadow hover:scale-105"
+          onClick={() =>
+            chrome.runtime.sendMessage({
+              type: 'WEB_NOTIFICATION',
+              message: 'Hello from Side Panel! I am a Web Notification!',
+            })
+          }>
+          Show Web Notification (3s delay)
         </button>
       </header>
     </div>
