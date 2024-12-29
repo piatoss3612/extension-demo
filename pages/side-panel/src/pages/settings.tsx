@@ -1,11 +1,9 @@
-import { useStorage, withErrorBoundary, withSuspense } from '@extension/shared';
-import { exampleThemeStorage } from '@extension/storage';
+import { withErrorBoundary, withSuspense } from '@extension/shared';
+import { useTheme } from '@src/hooks';
 import { type ComponentPropsWithoutRef } from 'react';
-import { NavLink } from 'react-router';
 
 const Settings = () => {
-  const theme = useStorage(exampleThemeStorage);
-  const isLight = theme === 'light';
+  const { isLight } = useTheme();
 
   return (
     <div className={`App ${isLight ? 'bg-slate-50' : 'bg-gray-800'}`}>
@@ -14,27 +12,22 @@ const Settings = () => {
         <div className="p-4">
           <ToggleButton>Toggle theme</ToggleButton>
         </div>
-        <div className="mt-4 flex flex-col items-center rounded-lg border border-gray-300 p-4">
-          <NavLink to="/" className="font-bold text-blue-500 hover:underline">
-            Go to Home
-          </NavLink>
-        </div>
       </header>
     </div>
   );
 };
 
 const ToggleButton = (props: ComponentPropsWithoutRef<'button'>) => {
-  const theme = useStorage(exampleThemeStorage);
+  const { isLight, toggle } = useTheme();
   return (
     <button
       className={
         props.className +
         ' ' +
         'font-bold mt-4 py-2 px-4 rounded-xl shadow hover:scale-105 ' +
-        (theme === 'light' ? 'bg-white text-black' : 'bg-black text-white')
+        (isLight ? 'bg-white text-black' : 'bg-black text-white')
       }
-      onClick={exampleThemeStorage.toggle}>
+      onClick={toggle}>
       {props.children}
     </button>
   );

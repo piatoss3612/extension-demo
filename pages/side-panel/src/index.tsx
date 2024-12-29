@@ -1,9 +1,8 @@
 import { createRoot } from 'react-dom/client';
 import '@src/index.css';
 import { Routes, Route, HashRouter } from 'react-router';
-import Home from '@src/Home';
-import Settings from './Settings';
-import Notification from './Notification';
+import { Home, Notification, Settings } from '@src/pages';
+import BottomNav from './components/bottomNav';
 
 function init() {
   const appContainer = document.querySelector('#app-container');
@@ -18,6 +17,7 @@ function init() {
         <Route path="/notification" element={<Notification />} />
         <Route path="/settings" element={<Settings />} />
       </Routes>
+      <BottomNav />
     </HashRouter>,
   );
 }

@@ -13,13 +13,13 @@ chrome.runtime.onMessage.addListener(
     message,
     // sender, sendResponse
   ) => {
-    if (message.type === 'WEB_NOTIFICATION') {
+    if (message.type === 'NOTIFICATION') {
       setTimeout(() => {
         chrome.notifications.create(
           {
             type: 'basic',
-            iconUrl: chrome.runtime.getURL('side-panel/smile_pepe.jpeg'),
-            title: 'Web Notification',
+            iconUrl: chrome.runtime.getURL('side-panel/wfh_cat.png'),
+            title: 'Notification',
             message: message.message,
             priority: 0,
             requireInteraction: !!message.requireInteraction,
@@ -30,7 +30,7 @@ chrome.runtime.onMessage.addListener(
         );
 
         chrome.notifications.onClicked.addListener(notificationId => {
-          console.log('notificationId', notificationId);
+          console.log('notification clicked', notificationId);
         });
       }, 3000);
     }

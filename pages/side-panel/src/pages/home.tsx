@@ -1,11 +1,9 @@
-import { useStorage, withErrorBoundary, withSuspense } from '@extension/shared';
-import { exampleThemeStorage } from '@extension/storage';
+import { withErrorBoundary, withSuspense } from '@extension/shared';
+import { useTheme } from '@src/hooks';
 import { useState } from 'react';
-import { NavLink } from 'react-router';
 
 const Home = () => {
-  const theme = useStorage(exampleThemeStorage);
-  const isLight = theme === 'light';
+  const { isLight } = useTheme();
   const logo = isLight ? 'side-panel/logo_vertical.svg' : 'side-panel/logo_vertical_dark.svg';
   const goGithubSite = () => chrome.tabs.create({ url: 'https://github.com/piatoss3612/extension-demo' });
 
@@ -15,8 +13,6 @@ const Home = () => {
     setIsLoading(true);
 
     chrome.identity.getAuthToken({ interactive: true }, async token => {
-      console.log(token);
-
       const init = {
         method: 'GET',
         async: true,
@@ -48,17 +44,6 @@ const Home = () => {
           onClick={getAuthToken}>
           {isLoading ? 'Loading...' : 'Get Auth Token'}
         </button>
-
-        <div className="mt-8 flex flex-col items-center rounded-lg border border-gray-300 p-4">
-          <NavLink to="/notification" className="font-bold text-blue-500 hover:underline">
-            Notification
-          </NavLink>
-        </div>
-        <div className="mt-4 flex flex-col items-center rounded-lg border border-gray-300 p-4">
-          <NavLink to="/settings" className="font-bold text-blue-500 hover:underline">
-            Settings
-          </NavLink>
-        </div>
       </header>
     </div>
   );
