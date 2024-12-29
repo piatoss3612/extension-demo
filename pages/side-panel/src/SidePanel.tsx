@@ -61,6 +61,16 @@ const SidePanel = () => {
           }>
           Show Web Notification (3s delay)
         </button>
+        <button
+          className="mt-4 rounded bg-blue-500 px-4 py-1 font-bold text-white shadow hover:scale-105"
+          onClick={() =>
+            chrome.runtime.sendMessage({
+              type: 'PUSH_NOTIFICATION',
+              message: 'Hello from Side Panel! I am a Push Notification!',
+            })
+          }>
+          Show Push Notification
+        </button>
       </header>
     </div>
   );

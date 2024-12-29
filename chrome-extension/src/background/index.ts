@@ -21,7 +21,7 @@ chrome.runtime.onMessage.addListener(
             iconUrl: chrome.runtime.getURL('side-panel/smile_pepe.jpeg'),
             title: 'Web Notification',
             message: message.message,
-            priority: 1,
+            priority: 0,
             requireInteraction: true,
           },
           notificationId => {
