@@ -10,6 +10,25 @@ const SidePanel = () => {
   const goGithubSite = () =>
     chrome.tabs.create({ url: 'https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite' });
 
+  const getAuthToken = () => {
+    chrome.identity.getAuthToken({ interactive: true }, async token => {
+      const init = {
+        method: 'GET',
+        async: true,
+        headers: {
+          Authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        },
+        contentType: 'json',
+      };
+
+      const response = await fetch('https://www.googleapis.com/oauth2/v1/userinfo', init);
+      const data = await response.json();
+
+      console.log(data);
+    });
+  };
+
   return (
     <div className={`App ${isLight ? 'bg-slate-50' : 'bg-gray-800'}`}>
       <header className={`App-header ${isLight ? 'text-gray-900' : 'text-gray-100'}`}>
@@ -20,6 +39,11 @@ const SidePanel = () => {
           Edit <code>pages/side-panel/src/SidePanel.tsx</code>
         </p>
         <ToggleButton>Toggle theme</ToggleButton>
+        <button
+          className="mt-4 rounded bg-blue-500 px-4 py-1 font-bold text-white shadow hover:scale-105"
+          onClick={getAuthToken}>
+          Get AuthToken
+        </button>
       </header>
     </div>
   );
