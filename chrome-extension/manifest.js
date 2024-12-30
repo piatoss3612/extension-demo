@@ -34,10 +34,10 @@ const manifest = {
     type: 'module',
   },
   action: {
-    default_icon: 'icon-34.png',
+    default_icon: 'icon.png',
   },
   icons: {
-    128: 'icon-128.png',
+    128: 'icon.png',
   },
   web_accessible_resources: [
     {

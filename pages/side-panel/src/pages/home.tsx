@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 const Home = () => {
   const { isLight } = useTheme();
-  const logo = isLight ? 'side-panel/logo_vertical.svg' : 'side-panel/logo_vertical_dark.svg';
+  const logo = 'side-panel/logo.png';
   const goGithubSite = () => chrome.tabs.create({ url: 'https://github.com/piatoss3612/extension-demo' });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -35,7 +35,7 @@ const Home = () => {
   return (
     <div className={`App ${isLight ? 'bg-slate-50' : 'bg-gray-800'}`}>
       <header className={`App-header ${isLight ? 'text-gray-900' : 'text-gray-100'}`}>
-        <h1 className="text-2xl font-bold">Home</h1>
+        <h1 className="text-2xl font-bold">Sidekick</h1>
         <button onClick={goGithubSite} className="mt-4">
           <img src={chrome.runtime.getURL(logo)} className="App-logo" alt="logo" />
         </button>
