@@ -19,7 +19,12 @@ const manifest = {
   name: '__MSG_extensionName__',
   oauth2: {
     client_id: process.env.GOOGLE_CLIENT_ID,
-    scopes: ['https://www.googleapis.com/auth/userinfo.email'], // TODO: check required scopes
+    scopes: [
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'https://www.googleapis.com/auth/calendar.readonly',
+      'https://www.googleapis.com/auth/calendar.events',
+    ],
   },
   key: process.env.EXT_PUBLIC_KEY,
   version: packageJson.version,
