@@ -1,6 +1,6 @@
 import { withErrorBoundary, withSuspense } from '@extension/shared';
 import { useTheme } from '@src/hooks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Home = () => {
   const { isLight } = useTheme();
@@ -8,7 +8,11 @@ const Home = () => {
   const goGithubSite = () => chrome.tabs.create({ url: 'https://github.com/piatoss3612/extension-demo' });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [authToken, setAuthToken] = useState<string>('');
+  const [authToken, setAuthToken] = useState<{
+    access_token: string;
+    refresh_token: string;
+    expires_in: number;
+  } | null>(null);
   const [userInfo, setUserInfo] = useState<{
     id: string;
     email: string;
@@ -38,19 +42,82 @@ const Home = () => {
     }[]
   >([]);
 
-  const getAuthToken = () => {
-    setIsLoading(true);
+  const onLaunchWebAuthFlow = async () => {
+    const manifest = chrome.runtime.getManifest();
+    if (!manifest.oauth2) throw new Error('No OAuth2 configuration defined in the manifest file');
 
-    chrome.identity.getAuthToken({ interactive: true }, token => {
-      setIsLoading(false);
+    const authUrl = new URL('https://accounts.google.com/o/oauth2/auth');
+    const clientId = manifest.oauth2.client_id;
 
-      if (!token) {
-        setAuthToken('');
-        return;
-      }
+    const redirectUri = `https://${chrome.runtime.id}.chromiumapp.org`;
 
-      setAuthToken(token);
-    });
+    const state = Math.random().toString(36).substring(7);
+    const scopes = manifest.oauth2.scopes || [];
+
+    authUrl.searchParams.set('state', state);
+    authUrl.searchParams.set('client_id', clientId);
+    authUrl.searchParams.set('redirect_uri', redirectUri);
+
+    authUrl.searchParams.set('scope', scopes.join(' '));
+    authUrl.searchParams.set('response_type', 'code');
+    authUrl.searchParams.set('access_type', 'offline');
+    authUrl.searchParams.set('include_granted_scopes', 'true');
+    authUrl.searchParams.set('prompt', 'consent');
+
+    chrome.identity.launchWebAuthFlow(
+      {
+        url: authUrl.href,
+        interactive: true,
+      },
+      async redirectUrl => {
+        if (chrome.runtime.lastError) {
+          console.error(`WebAuthFlow failed: ${chrome.runtime.lastError?.message}`);
+          return;
+        }
+
+        if (!redirectUrl) {
+          console.error('No redirect URL');
+          return;
+        }
+
+        const params = new URLSearchParams(redirectUrl.split('?')[1]);
+        const code = params.get('code');
+
+        if (!code) {
+          console.error('No code found');
+          return;
+        }
+
+        const clientSecret = (manifest.oauth2 as unknown as { client_secret: string }).client_secret;
+
+        console.log('clientSecret: ', clientSecret);
+
+        const response = await fetch('https://oauth2.googleapis.com/token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            code,
+            client_id: clientId,
+            client_secret: clientSecret,
+            redirect_uri: redirectUri,
+            grant_type: 'authorization_code',
+          }),
+        });
+
+        if (!response.ok) {
+          console.error(`Failed to exchange code for token: ${response.statusText}`);
+          return;
+        }
+
+        const data = (await response.json()) as { access_token: string; refresh_token: string; expires_in: number };
+
+        console.log('data: ', data);
+
+        setAuthToken(data);
+      },
+    );
   };
 
   const getUserInfo = async () => {
@@ -64,7 +131,7 @@ const Home = () => {
       method: 'GET',
       async: true,
       headers: {
-        Authorization: 'Bearer ' + authToken,
+        Authorization: 'Bearer ' + authToken.access_token,
         'Content-Type': 'application/json',
       },
       contentType: 'json',
@@ -78,7 +145,7 @@ const Home = () => {
     }
 
     if (response.status === 401) {
-      setAuthToken('');
+      setAuthToken(null);
       setIsLoading(false);
       return;
     }
@@ -100,7 +167,7 @@ const Home = () => {
       method: 'GET',
       async: true,
       headers: {
-        Authorization: 'Bearer ' + authToken,
+        Authorization: 'Bearer ' + authToken.access_token,
         'Content-Type': 'application/json',
       },
       contentType: 'json',
@@ -116,7 +183,7 @@ const Home = () => {
     }
 
     if (response.status === 401) {
-      setAuthToken('');
+      setAuthToken(null);
       setIsLoading(false);
       return;
     }
@@ -125,6 +192,57 @@ const Home = () => {
 
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    if (!authToken) {
+      return;
+    }
+
+    const interval = setInterval(async () => {
+      // refresh token
+      const manifest = chrome.runtime.getManifest();
+      if (!manifest.oauth2) throw new Error('No OAuth2 configuration defined in the manifest file');
+
+      const clientId = manifest.oauth2.client_id;
+      const clientSecret = (manifest.oauth2 as unknown as { client_secret: string }).client_secret;
+
+      const response = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          client_id: clientId,
+          client_secret: clientSecret,
+          refresh_token: authToken.refresh_token,
+          grant_type: 'refresh_token',
+        }),
+      });
+
+      if (!response.ok) {
+        console.error(`Failed to refresh token: ${response.statusText}`);
+        return;
+      }
+
+      const data = (await response.json()) as { access_token: string; expires_in: number };
+
+      console.log('refreshed data: ', data);
+
+      setAuthToken(prev => {
+        if (prev) {
+          return {
+            ...prev,
+            access_token: data.access_token,
+            expires_in: data.expires_in,
+          };
+        }
+
+        return null;
+      });
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [authToken]);
 
   return (
     <div className={`App ${isLight ? 'bg-slate-50' : 'bg-gray-800'}`}>
@@ -154,7 +272,7 @@ const Home = () => {
         {!authToken && (
           <button
             className="mt-4 rounded bg-blue-500 px-4 py-1 font-bold text-white shadow hover:scale-105"
-            onClick={getAuthToken}>
+            onClick={onLaunchWebAuthFlow}>
             {isLoading ? 'Loading...' : 'Get Auth Token'}
           </button>
         )}
@@ -169,6 +287,15 @@ const Home = () => {
               className="mt-4 rounded bg-blue-500 px-4 py-1 font-bold text-white shadow hover:scale-105"
               onClick={getCalendars}>
               {isLoading ? 'Loading...' : 'Get Calendars'}
+            </button>
+            <button
+              onClick={() => {
+                setAuthToken(null);
+                setUserInfo(null);
+                setCalendars([]);
+              }}
+              className="mt-4 rounded bg-blue-500 px-4 py-1 font-bold text-white shadow hover:scale-105">
+              Logout
             </button>
           </>
         )}

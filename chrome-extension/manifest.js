@@ -19,6 +19,7 @@ const manifest = {
   name: '__MSG_extensionName__',
   oauth2: {
     client_id: process.env.GOOGLE_CLIENT_ID,
+    client_secret: process.env.GOOGLE_CLIENT_SECRET,
     scopes: [
       'https://www.googleapis.com/auth/userinfo.email',
       'https://www.googleapis.com/auth/userinfo.profile',
