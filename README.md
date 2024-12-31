@@ -18,8 +18,7 @@
 
 ## Intro
 
-This boilerplate helps you create Chrome/Firefox extensions using React and Typescript. It improves
-the build speed and development experience by using Vite and Turborepo.
+This demo project is a Chrome extension boilerplate with React, TypeScript, Tailwindcss, Vite, and Turborepo.
 
 ## Features
 

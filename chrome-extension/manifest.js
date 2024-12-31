@@ -27,7 +27,6 @@ const manifest = {
       'https://www.googleapis.com/auth/calendar.events',
     ],
   },
-  key: process.env.EXT_PUBLIC_KEY,
   version: packageJson.version,
   description: '__MSG_extensionDescription__',
   host_permissions: ['<all_urls>'],
