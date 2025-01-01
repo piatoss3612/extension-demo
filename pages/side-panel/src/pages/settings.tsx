@@ -1,12 +1,11 @@
 import { withErrorBoundary, withSuspense } from '@extension/shared';
+import Container from '../components/container';
 
 const Settings = () => {
   return (
-    <div className="container">
-      <header className="header">
-        <h1 className="text-2xl font-bold">Settings</h1>
-      </header>
-    </div>
+    <Container>
+      <h1 className="text-2xl font-bold">Settings</h1>
+    </Container>
   );
 };
 

@@ -4,18 +4,28 @@ type BottomNavigationProps = {
   routes: {
     path: string;
     name: string;
+    exclude?: boolean;
   }[];
+  hideOnExclude?: boolean;
 };
 
-const BottomNavigation = ({ routes }: BottomNavigationProps) => {
+const BottomNavigation = ({ routes, hideOnExclude }: BottomNavigationProps) => {
   const location = useLocation();
+  const currentRoute = routes.find(route => location.pathname === route.path);
+  const hidden = hideOnExclude && currentRoute?.exclude;
+
+  if (hidden) {
+    return null;
+  }
 
   return (
     <nav className="bottom-0 w-full bg-transparent text-black">
       <ul className="flex justify-around rounded-full border bg-white shadow-lg">
         {routes.map((route, i) => {
-          // chrome extension에서는 location.pathname을 사용할 수 없습니다.
-          // hash router를 사용하고 있기 때문에 window.location.hash를 사용해야 합니다.
+          if (route.exclude) {
+            return null;
+          }
+
           const isActive = location.pathname === route.path;
 
           return (

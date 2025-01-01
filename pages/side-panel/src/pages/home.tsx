@@ -1,10 +1,8 @@
 import { withErrorBoundary, withSuspense } from '@extension/shared';
 import { useEffect, useState } from 'react';
+import Container from '../components/container';
 
 const Home = () => {
-  const logo = 'side-panel/temp_logo.png';
-  const goGithubSite = () => chrome.tabs.create({ url: 'https://github.com/piatoss3612/extension-demo' });
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [authToken, setAuthToken] = useState<{
     access_token: string;
@@ -243,62 +241,57 @@ const Home = () => {
   }, [authToken]);
 
   return (
-    <div className="container">
-      <header className="header">
-        <h1 className="text-2xl font-bold">Sidekick</h1>
-        <button onClick={goGithubSite} className="mt-4">
-          <img src={chrome.runtime.getURL(logo)} className="size-60" alt="logo" />
+    <Container>
+      <h1 className="text-2xl font-bold">Sidekick</h1>
+      {userInfo && (
+        <div className="mt-4 flex flex-col items-center gap-2">
+          <p className="text-sm font-bold">User Info</p>
+          <img src={userInfo.picture} alt="user" className="size-10 rounded-full" />
+          <p className="text-sm">{userInfo.name}</p>
+          <p className="text-sm">{userInfo.email}</p>
+        </div>
+      )}
+      {calendars.length > 0 && (
+        <div className="mt-4 flex flex-col items-center gap-2">
+          <p className="text-sm font-bold">Calendars</p>
+          {calendars.map(calendar => (
+            <div key={calendar.id} className="flex flex-col items-center gap-2">
+              <p className="text-sm">{calendar.summary}</p>
+            </div>
+          ))}
+        </div>
+      )}
+      {!authToken && (
+        <button
+          className="mt-4 rounded bg-blue-500 px-4 py-1 font-bold text-white shadow hover:scale-105"
+          onClick={onLaunchWebAuthFlow}>
+          {isLoading ? 'Loading...' : 'Get Auth Token'}
         </button>
-        {userInfo && (
-          <div className="mt-4 flex flex-col items-center gap-2">
-            <p className="text-sm font-bold">User Info</p>
-            <img src={userInfo.picture} alt="user" className="size-10 rounded-full" />
-            <p className="text-sm">{userInfo.name}</p>
-            <p className="text-sm">{userInfo.email}</p>
-          </div>
-        )}
-        {calendars.length > 0 && (
-          <div className="mt-4 flex flex-col items-center gap-2">
-            <p className="text-sm font-bold">Calendars</p>
-            {calendars.map(calendar => (
-              <div key={calendar.id} className="flex flex-col items-center gap-2">
-                <p className="text-sm">{calendar.summary}</p>
-              </div>
-            ))}
-          </div>
-        )}
-        {!authToken && (
+      )}
+      {authToken && (
+        <>
           <button
             className="mt-4 rounded bg-blue-500 px-4 py-1 font-bold text-white shadow hover:scale-105"
-            onClick={onLaunchWebAuthFlow}>
-            {isLoading ? 'Loading...' : 'Get Auth Token'}
+            onClick={getUserInfo}>
+            {isLoading ? 'Loading...' : 'Get User Info'}
           </button>
-        )}
-        {authToken && (
-          <>
-            <button
-              className="mt-4 rounded bg-blue-500 px-4 py-1 font-bold text-white shadow hover:scale-105"
-              onClick={getUserInfo}>
-              {isLoading ? 'Loading...' : 'Get User Info'}
-            </button>
-            <button
-              className="mt-4 rounded bg-blue-500 px-4 py-1 font-bold text-white shadow hover:scale-105"
-              onClick={getCalendars}>
-              {isLoading ? 'Loading...' : 'Get Calendars'}
-            </button>
-            <button
-              onClick={() => {
-                setAuthToken(null);
-                setUserInfo(null);
-                setCalendars([]);
-              }}
-              className="mt-4 rounded bg-blue-500 px-4 py-1 font-bold text-white shadow hover:scale-105">
-              Logout
-            </button>
-          </>
-        )}
-      </header>
-    </div>
+          <button
+            className="mt-4 rounded bg-blue-500 px-4 py-1 font-bold text-white shadow hover:scale-105"
+            onClick={getCalendars}>
+            {isLoading ? 'Loading...' : 'Get Calendars'}
+          </button>
+          <button
+            onClick={() => {
+              setAuthToken(null);
+              setUserInfo(null);
+              setCalendars([]);
+            }}
+            className="mt-4 rounded bg-blue-500 px-4 py-1 text-lg font-bold text-white shadow hover:scale-105">
+            Logout
+          </button>
+        </>
+      )}
+    </Container>
   );
 };
 
