@@ -2,7 +2,6 @@
 
 ## Table of Contents
 
-- [Intro](#intro)
 - [Features](#features)
 - [Getting started](#getting-started)
 - [Install dependency](#install-dependency)
@@ -15,10 +14,6 @@
     - [Pages](#structure-pages)
 - [Troubleshooting](#troubleshooting)
 - [Reference](#reference)
-
-## Intro
-
-This demo project is a Chrome extension boilerplate with React, TypeScript, Tailwindcss, Vite, and Turborepo.
 
 ## Features
 
@@ -116,6 +111,7 @@ Code that is transpiled to be part of the extension lives in the [pages](pages/)
 Some shared packages:
 
 - `dev-utils` - utilities for Chrome extension development (manifest-parser, logger)
+- `background` - separate package for the background script
 - `i18n` - custom internationalization package; provides i18n function with type safety and other validation
 - `hmr` - custom HMR plugin for Vite, injection script for reload/refresh, HMR dev-server
 - `shared` - shared code for the entire project (types, constants, custom hooks, components etc.)

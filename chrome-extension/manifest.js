@@ -1,7 +1,4 @@
 import fs from 'node:fs';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const packageJson = JSON.parse(fs.readFileSync('../package.json', 'utf8'));
 
@@ -18,8 +15,8 @@ const manifest = {
    */
   name: '__MSG_extensionName__',
   oauth2: {
-    client_id: process.env.GOOGLE_CLIENT_ID,
-    client_secret: process.env.GOOGLE_CLIENT_SECRET,
+    client_id: process.env.VITE_GOOGLE_CLIENT_ID,
+    client_secret: process.env.VITE_GOOGLE_CLIENT_SECRET,
     scopes: [
       'https://www.googleapis.com/auth/userinfo.email',
       'https://www.googleapis.com/auth/userinfo.profile',
@@ -27,6 +24,7 @@ const manifest = {
       'https://www.googleapis.com/auth/calendar.events',
     ],
   },
+  minimum_chrome_version: '114', // For side panel support
   version: packageJson.version,
   description: '__MSG_extensionDescription__',
   host_permissions: ['<all_urls>'],

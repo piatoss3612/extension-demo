@@ -18,7 +18,6 @@
   "dependencies": {
     "@extension/shared": "workspace:*",
     "@extension/storage": "workspace:*",
-    "dotenv": "^16.4.7",
     "webextension-polyfill": "^0.12.0"
   },
   "devDependencies": {
