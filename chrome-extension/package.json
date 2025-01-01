@@ -23,9 +23,11 @@
   },
   "devDependencies": {
     "@extension/dev-utils": "workspace:*",
+    "@extension/background": "workspace:*",
     "@extension/hmr": "workspace:*",
     "@extension/tsconfig": "workspace:*",
     "@extension/vite-config": "workspace:*",
+    "@types/webextension-polyfill": "^0.12.1",
     "@laynezh/vite-plugin-lib-assets": "^0.5.23",
     "@types/ws": "^8.5.13",
     "cross-env": "^7.0.3",
