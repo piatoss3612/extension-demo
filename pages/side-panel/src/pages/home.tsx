@@ -1,10 +1,8 @@
 import { withErrorBoundary, withSuspense } from '@extension/shared';
-import { useTheme } from '@src/hooks';
 import { useEffect, useState } from 'react';
 
 const Home = () => {
-  const { isLight } = useTheme();
-  const logo = 'side-panel/logo.png';
+  const logo = 'side-panel/temp_logo.png';
   const goGithubSite = () => chrome.tabs.create({ url: 'https://github.com/piatoss3612/extension-demo' });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -245,11 +243,11 @@ const Home = () => {
   }, [authToken]);
 
   return (
-    <div className={`App ${isLight ? 'bg-slate-50' : 'bg-gray-800'}`}>
-      <header className={`App-header ${isLight ? 'text-gray-900' : 'text-gray-100'}`}>
+    <div className="container">
+      <header className="header">
         <h1 className="text-2xl font-bold">Sidekick</h1>
         <button onClick={goGithubSite} className="mt-4">
-          <img src={chrome.runtime.getURL(logo)} className="App-logo" alt="logo" />
+          <img src={chrome.runtime.getURL(logo)} className="size-60" alt="logo" />
         </button>
         {userInfo && (
           <div className="mt-4 flex flex-col items-center gap-2">

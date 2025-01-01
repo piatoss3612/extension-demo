@@ -29,6 +29,7 @@
     "@radix-ui/themes": "^3.1.6",
     "eslint-plugin-tailwindcss": "^3.17.4",
     "mobx": "^6.13.5",
+    "mobx-react-lite": "^4.1.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-router": "^7.1.1"

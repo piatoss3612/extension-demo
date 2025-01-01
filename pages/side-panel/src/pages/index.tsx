@@ -1,5 +1,5 @@
 import Home from './home';
-import Notification from './notification';
+import Calendar from './calendar';
 import Settings from './settings';
 
-export { Home, Notification, Settings };
+export { Home, Calendar, Settings };

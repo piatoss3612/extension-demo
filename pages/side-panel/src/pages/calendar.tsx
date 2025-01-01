@@ -1,15 +1,13 @@
 import { withErrorBoundary, withSuspense } from '@extension/shared';
-import { useTheme } from '@src/hooks';
 import { useNotification } from '@src/hooks/useNotification';
 
-const Notification = () => {
-  const { isLight } = useTheme();
+const Calendar = () => {
   const { toggle, requireInteraction } = useNotification();
 
   return (
-    <div className={`App ${isLight ? 'bg-slate-50' : 'bg-gray-800'}`}>
-      <header className={`App-header ${isLight ? 'text-gray-900' : 'text-gray-100'}`}>
-        <h1 className="text-2xl font-bold">Notification</h1>
+    <div className="container">
+      <header className="header">
+        <h1 className="text-2xl font-bold">Calendar</h1>
         <div className="mt-4 flex flex-col items-center p-4">
           <p>
             {`Click the button below to show a web notification. ${
@@ -38,4 +36,4 @@ const Notification = () => {
   );
 };
 
-export default withErrorBoundary(withSuspense(Notification, <div> Loading ... </div>), <div> Error Occur </div>);
+export default withErrorBoundary(withSuspense(Calendar, <div> Loading ... </div>), <div> Error Occur </div>);
